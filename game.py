@@ -26,6 +26,19 @@ def check_win(player):
 def check_tie():
     return " " not in board
 
+def reset_game():
+    global board
+    board = [" " for _ in range(9)]
+    for btn in buttons:
+        btn["text"] = " "
+
+def game_over(message):
+    # ask the player if they want to play again
+    if messagebox.askyesno("Game Over", message + "\nPlay again?"):
+        reset_game()
+    else:
+        root.destroy()
+
 # AI move (random)
 def ai_move():
     empty_spots = [i for i, spot in enumerate(board) if spot == " "]
@@ -34,11 +47,9 @@ def ai_move():
         board[move] = "O"
         buttons[move]["text"] = "O"
         if check_win("O"):
-            tk.messagebox.showinfo("Game Over", "You lose!")
-            root.quit()
+            game_over("You lose!")
         elif check_tie():
-            tk.messagebox.showinfo("Game Over", "It's a tie!")
-            root.quit()
+            game_over("It's a tie!")
 
 # handle player click
 def on_click(i):
@@ -46,18 +57,16 @@ def on_click(i):
         board[i] = "X"
         buttons[i]["text"] = "X"
         if check_win("X"):
-            tk.messagebox.showinfo("Game Over", "You win!")
-            root.quit()
+            game_over("You win!")
         elif check_tie():
-            tk.messagebox.showinfo("Game Over", "It's a tie!")
-            root.quit()
+            game_over("It's a tie!")
         else:
             ai_move()
 
 # create buttons
 for i in range(9):
-    btn = tk.Button(root, text=" ", font=("Times New Roman", 40), width=5, height=2, command=lambda i=i: on_click(i))
+    btn = tk.Button(root, text=" ", font=("Arial", 40), width=5, height=2, command=lambda i=i: on_click(i))
     btn.grid(row=i//3, column=i%3)
     buttons.append(btn)
-    
+
 root.mainloop()
