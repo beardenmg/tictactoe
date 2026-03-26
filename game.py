@@ -2,6 +2,9 @@ import tkinter as tk
 from tkinter import messagebox
 import random
 
+# setting default difficulty
+difficulty = "easy"
+
 # initialize main window
 root = tk.Tk()
 root.title("Tic-Tac-Toe")
@@ -42,14 +45,53 @@ def game_over(message):
 # AI move (random)
 def ai_move():
     empty_spots = [i for i, spot in enumerate(board) if spot == " "]
-    if empty_spots:
+
+    # easy mode is just random
+    if difficulty == "easy":
         move = random.choice(empty_spots)
-        board[move] = "O"
-        buttons[move]["text"] = "O"
-        if check_win("O"):
-            game_over("You lose!")
-        elif check_tie():
-            game_over("It's a tie!")
+
+    else:
+        # hard
+
+        # attempt to win
+        for i in empty_spots:
+            board[i] = "O"
+            if check_win("O"):
+                buttons[i]["text"] = "O"
+                game_over("You lose!")
+                return
+            board[i] = " "
+        
+        # attempt to block
+        for i in empty_spots:
+            board[i] = "X"
+            if check_win("X"):
+                board[i] = "O"
+                buttons[i]["text"] = "O"
+                return
+            board[i] = " "
+
+        # fall back to random with some strategy
+        if random.random() < 0.2:
+            move = random.choice(empty_spots)
+        else:
+            if 4 in empty_spots:
+                move = 4
+            else:
+                corners = [i for i in [0,2,6,8] if i in empty_spots]
+                if corners:
+                    move = random.choice(corners)
+                else:
+                    move = random.choice(empty_spots)
+
+    # make move
+    board[move] = "O"
+    buttons[move]["text"] = "O"
+
+    if check_win("O"):
+        game_over("You lose!")
+    elif check_tie():
+        game_over("It's a tie!")
 
 # handle player click
 def on_click(i):
@@ -68,5 +110,18 @@ for i in range(9):
     btn = tk.Button(root, text=" ", font=("Arial", 40), width=5, height=2, command=lambda i=i: on_click(i))
     btn.grid(row=i//3, column=i%3)
     buttons.append(btn)
+
+def choose_difficulty():
+    global difficulty
+    choice = messagebox.askquestion(
+        "Choose Difficulty",
+        "Do you want a harder opponent?"
+    )
+    if choice == "yes":
+        difficulty = "hard"
+    else:
+        difficulty = "easy"
+
+choose_difficulty()
 
 root.mainloop()
