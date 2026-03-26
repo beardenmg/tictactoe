@@ -2,5 +2,6 @@ This is a simple tic tac toe board in python with a popup GUI. Run the command:
 
 python3 game.py
 
-And the game should start automatically with a message box announcing win/lose/tie. Currently, the enemy looks to pick a random slot in the box but I will be looking to make the enemy
-smarter in future iterations. Happy Gaming!
+And the game will launch, prompting the user to ask if they want to play against a harder opponent.
+If they click the 'yes' button, then the difficulty is set to hard and the AI will make meaningful picks in order to attempt to win. 
+The game will end in a win/lose/draw, and a prompt asking to play again will appear. Clicking yes will reset the board, clicking no will exit the program.
