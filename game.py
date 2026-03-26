@@ -7,7 +7,7 @@ difficulty = "easy"
 
 # initialize main window
 root = tk.Tk()
-root.title("Tic-Tac-Toe")
+root.title("Tic Tac Toe")
 
 # game board state
 board = [" " for _ in range(9)]
